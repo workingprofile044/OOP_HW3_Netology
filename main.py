@@ -24,3 +24,24 @@ if sorted_heroes:
     print(f"Самый умный герой {smartest_hero[0]} с показателем интеллекта {smartest_hero[1]}")
 else:
     print("Не найдено")
+
+
+class YaUploader:
+    def __init__(self, token: str):
+        self.token = token
+
+    def upload(self, file_path: str):
+        """Метод загружает файлы по списку file_list на яндекс диск"""
+        headers = {'Authorization': 'OAuth ' + self.token}
+        response = requests.get('https://cloud-api.yandex.net/v1/disk/resources/upload',
+                                headers=headers, params={'path': 'file.txt', 'overwrite': 'true'})
+        href = response.json().get('href')
+        with open(file_path, 'rb') as f:
+            requests.put(href, data=f)
+
+
+if __name__ == '__main__':
+    path_to_file = r'C:\Users\NAME\Desktop\OOP_HW3\file.txt'
+    token = 'y0_token'
+    uploader = YaUploader(token)
+    result = uploader.upload(path_to_file)
